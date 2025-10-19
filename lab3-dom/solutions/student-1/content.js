@@ -1,268 +1,337 @@
-'use strict';
+'use strict'; // строгий режим
 
-// === Константы темы ===
-const SAKURA_KEY = 'theme:sakura:enabled';      // localStorage ключ
-const SAKURA_MAIN = '#f8cbe0';                   // светло-розовый (главный цвет)
-const SAKURA_DEEP = '#ee9ec5';                   // более насыщенный розовый (акцент)
-const SAKURA_TEXT = '#4a2b3b';                   // тёмно-бордовый для текста
-const SAKURA_LINK = '#c54a7f';                   // розовый для ссылок
-const SAKURA_SHADOW = '0 6px 18px rgba(197, 74, 127, 0.25)';
+// === Палитра сакуры ===
+const SAKURA_MAIN   = '#f8cbe0';  // светлый розовый (фон)
+const SAKURA_DEEP   = '#ee9ec5';  // насыщенный розовый (акцент)
+const SAKURA_TEXT   = '#4a2b3b';  // тёмный бордово-розовый (текст)
+const SAKURA_LINK   = '#c54a7f';  // розовый для ссылок
+const SAKURA_SOFT   = '#fff5fa';  // молочно-розовый (мягкие подложки)
+const SAKURA_GLOW_1 = 'rgba(238,158,197,0.75)';  // нежное свечение
+const SAKURA_GLOW_2 = 'rgba(197,74,127,0.55)';   // глубокое свечение
 
-// Возвращает true/false из localStorage
-function isSakuraEnabled() {
-  return localStorage.getItem(SAKURA_KEY) === '1';
+// === ВКЛЮЧЕНИЕ СТИЛЕЙ САКУРЫ ===
+function sakuraStyles() {
+  // если уже добавлено — ничего не делаем
+  if (document.getElementById('sakura-styles')) return;
+
+  const style = document.createElement('style');
+  style.id = 'sakura-styles';
+  style.textContent = `
+    /* Глобальные CSS-переменные — удобно переиспользовать */
+    :root{
+      --sakura-main: ${SAKURA_MAIN};
+      --sakura-deep: ${SAKURA_DEEP};
+      --sakura-text: ${SAKURA_TEXT};
+      --sakura-link: ${SAKURA_LINK};
+      --sakura-soft: ${SAKURA_SOFT};
+      --sakura-glow-1: ${SAKURA_GLOW_1};
+      --sakura-glow-2: ${SAKURA_GLOW_2};
+    }
+
+    /* 1. Базовый цвет текста */
+    body {
+      color: var(--sakura-text) !important;
+      letter-spacing: 0.2px !important;
+      line-height: 1.6 !important;
+      background: var(--sakura-main) !important;
+    }
+
+    /* 2. Шапка */
+    header, .header, #header {
+      background-color: var(--sakura-deep) !important;
+      border: none !important;
+      box-shadow:
+        0 0 14px var(--sakura-glow-1),
+        0 6px 18px var(--sakura-glow-2) !important;
+      margin-bottom: 40px !important;
+    }
+
+    /* 3. Ссылки */
+    a {
+      color: var(--sakura-link) !important;
+      text-shadow: 0 0 8px var(--sakura-glow-1), 0 0 18px var(--sakura-glow-2) !important;
+      font-weight: 600 !important;
+    }
+
+    /* 4. Наведение на ссылки */
+    a:hover, a:focus {
+      color: var(--sakura-text) !important;
+      background-color: #ffe6f2 !important;
+      border: none !important;
+      box-shadow:
+        0 0 14px var(--sakura-glow-1),
+        0 0 26px var(--sakura-glow-2) !important;
+      text-decoration: none !important;
+    }
+
+    /* 5. Кнопки */
+    button, .button, input[type="submit"] {
+      background-color: var(--sakura-deep) !important;
+      color: #fff !important;
+      border-radius: 14px !important;
+      border: 2px solid var(--sakura-soft) !important;
+      box-shadow: 0 6px 18px var(--sakura-glow-2) !important;
+      padding: 10px 14px !important;
+    }
+    /* кнопки при наведении */
+    button:hover, .button:hover, input[type="submit"]:hover {
+      box-shadow:
+        0 0 16px var(--sakura-glow-1),
+        0 0 28px var(--sakura-glow-2) !important;
+      filter: brightness(1.03);
+    }
+
+    /* 6. Заголовки */
+    h1, h2, h3 {
+      color: var(--sakura-text) !important;
+      text-shadow: 0 0 8px var(--sakura-glow-1) !important;
+      font-weight: 800 !important;
+      border-bottom: 2px dashed var(--sakura-deep) !important;
+      padding-bottom: 6px !important;
+    }
+
+    /* 7. Футер */
+    footer, .footer {
+      background-color: var(--sakura-deep) !important;
+      box-shadow:
+        0 0 14px var(--sakura-glow-1),
+        0 6px 18px var(--sakura-glow-2) inset !important;
+      margin-top: 40px !important;
+      color: #fff !important;
+    }
+    /* 8. Ссылки в футере */
+    footer a, .footer a, footer a:visited, .footer a:visited {
+      color: #fff !important;
+      text-decoration: none !important;
+      text-shadow: 0 0 12px var(--sakura-glow-1), 0 0 20px var(--sakura-glow-2) !important;
+    }
+    /* 9. Наведение в футере */
+    footer a:hover, .footer a:hover {
+      color: var(--sakura-soft) !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      text-decoration: underline !important;
+    }
+
+    /* 10. Навигация в шапке */
+    nav, .navigation, .menu {
+      background-color: var(--sakura-deep) !important;
+      border: none !important;
+      box-shadow:
+        0 0 12px var(--sakura-glow-1),
+        0 0 22px var(--sakura-glow-2) !important;
+      border-radius: 12px !important;
+      padding: 10px !important;
+    }
+
+    /* 11. Блок входа */
+    .login_links{
+      background-color: var(--sakura-deep) !important;
+      border: none !important;
+      box-shadow:
+        0 0 10px var(--sakura-glow-1),
+        0 0 18px var(--sakura-glow-2) !important;
+      border-radius: 12px !important;
+    }
+
+    /* 12. Чётность недели */
+    .week_parity{
+      background-color: var(--sakura-deep) !important;
+      border: none !important;
+      box-shadow:
+        0 0 10px var(--sakura-glow-1),
+        0 0 18px var(--sakura-glow-2) !important;
+      border-radius: 12px !important;
+      color: #fff !important;
+    }
+
+    /* 13. Фоны основных контейнеров */
+    .page_wrapper { background-color: var(--sakura-main) !important; }
+    .main_slider_holder { background: #ffe6f2 !important; }
+    .news_box { background: #ffe9f4 !important; }
+
+    /* 14. Стратегические проекты университета */
+    .tab_items { background: var(--sakura-main) !important; }
+
+    /* 15. Учебные подразделения и «Ближайшие события» карусели */
+    .slick-track { background: var(--sakura-main) !important; margin-top: 40px !important; }
+
+    /* 16. Общие портлеты (карточки секций) */
+    .portlet-content {
+      background: var(--sakura-soft) !important;
+      border: 1px solid var(--sakura-deep) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 6px 18px var(--sakura-glow-2) !important;
+    }
+
+    /* 17. Навигация месяцев/года события */
+    .events_nav{
+      background: var(--sakura-deep) !important;
+      color: #fff !important;
+      box-shadow:
+        0 0 24px var(--sakura-glow-1),
+        0 0 48px var(--sakura-glow-2),
+        0 0 72px var(--sakura-glow-2) !important;
+      margin-top: 100px !important;
+      border-radius: 14px !important;
+    }
+
+    /* 18. Учебные подразделения (контейнер) */
+    .institutes_slider_box.institutes_box.cf.disable-user-actions{
+      box-shadow:
+        0 0 24px var(--sakura-glow-1),
+        0 0 48px var(--sakura-glow-2) !important;
+      margin-bottom: 120px !important;
+      background: var(--sakura-soft) !important;
+      border-radius: 14px !important;
+    }
+    .aui header .menu ul li .sub{
+      background: var(--sakura-deep) !important;}
+    
+    .aui h1{
+      color: var(--sakura-deep) !important;
+    }
+
+    .section{
+      background: var(--sakura-soft) !important;}
+    /* 19. Кнопки слайдера */
+    .slick-prev, .slick-next{
+      background: var(--sakura-deep) !important;
+      color: #fff !important;
+      border-radius: 12px !important;
+      box-shadow:
+        0 0 18px var(--sakura-glow-1),
+        0 0 28px var(--sakura-glow-2) !important;
+    }
+    .inst-slide.prev.cf, .inst-slide.next{
+      background: var(--sakura-main) !important;
+      z-index: 9999 !important;
+      opacity: 1 !important;
+      width: 5% !important;
+    }
+
+    /* 20. Таблицы, границы и разделители – тоже в розовый */
+    hr, table, th, td, .card, .box, .item,
+    input, textarea, select {
+      border-color: var(--sakura-deep) !important;
+      outline-color: var(--sakura-deep) !important;
+    }
+    ::placeholder { color: ${SAKURA_TEXT}A6 !important; opacity: 1; }
+  `;
+  document.head.appendChild(style);
 }
 
-// Сохраняет состояние
-function setSakuraEnabled(enabled) {
-  localStorage.setItem(SAKURA_KEY, enabled ? '1' : '0');
+// === ОТКЛЮЧЕНИЕ СТИЛЕЙ САКУРЫ ===
+function removeSakuraStyles() {
+  const style = document.getElementById('sakura-styles');
+  if (style) style.remove();
 }
 
-// Применение/сброс темы (меняем не менее 8 стилей)
-function applySakuraTheme(enabled) {
-  // 1) Корневые элементы
-  const pageWrapper = document.getElementById('page_wrapper'); // getElementById — ЯВНО
-  const body = document.body;
-
-  // 2) Часто встречающиеся элементы сайта
-  const mainSlider = document.querySelector('.main_slider_holder'); // querySelector
-  const newsBox = document.querySelector('.news_box');              // querySelector
-
-  // 3) Несколько элементов коллекцией (карточки, кнопки и т. д.)
-  const cards = document.querySelectorAll('.card, .box, .item');    // querySelectorAll (простой, но множественный)
-  const buttons = document.querySelectorAll('a.button, button, .btn');
-
-  // 4) СЛОЖНЫЙ СЕЛЕКТОР: активная ссылка в навигации
-  const activeNavLink = document.querySelector('.nav .menu-item.active > a');
-
-  // 5) Заголовки разделов, ссылки
-  const sectionTitles = document.querySelectorAll('h1, h2, h3');
-  const allLinks = document.querySelectorAll('a');
-
-  // 6) Пример использования parentElement/children
-  const header = document.querySelector('header, .header, .site-header');
-  const headerBar = header ? header.parentElement : null; // parentElement — применим фон контейнеру
-  const main = document.querySelector('main, .main, #main');
-  const mainChildren = main ? Array.from(main.children) : []; // children — пройдёмся по прямым детям основного контейнера
-
-  // Функции применения/сброса инлайновых стилей
-  const on = () => {
-    // a) фон и текст
-    (pageWrapper || body).style.background = SAKURA_MAIN;            // заливка страницы
-    (pageWrapper || body).style.color = SAKURA_TEXT;                 // цвет текста
-    (pageWrapper || body).style.letterSpacing = '0.2px';             // межбуквенный интервал
-    (pageWrapper || body).style.lineHeight = '1.6';                  // межстрочный интервал
-
-    // b) шапка/контейнер рядом (через parentElement)
-    if (headerBar) {
-      headerBar.style.background = '#fff5fa';
-      headerBar.style.boxShadow = SAKURA_SHADOW;
-    }
-
-    // c) основной слайдер/новости
-    if (mainSlider) {
-      mainSlider.style.background = '#ffe6f2';
-      mainSlider.style.borderRadius = '14px';
-      mainSlider.style.boxShadow = SAKURA_SHADOW;
-      mainSlider.style.padding = '12px';
-    }
-    if (newsBox) {
-      newsBox.style.background = '#ffe9f4';
-      newsBox.style.border = `1px solid ${SAKURA_DEEP}`;
-      newsBox.style.borderRadius = '12px';
-      newsBox.style.boxShadow = SAKURA_SHADOW;
-      newsBox.style.padding = '10px 12px';
-    }
-
-    // d) карточки
-    cards.forEach((el) => {
-      el.style.background = '#fff7fb';
-      el.style.border = `1px solid ${SAKURA_DEEP}`;
-      el.style.borderRadius = '14px';
-      el.style.boxShadow = SAKURA_SHADOW;
-      el.style.padding = '12px';
-    });
-
-    // e) кнопки
-    buttons.forEach((btn) => {
-      btn.style.background = SAKURA_DEEP;
-      btn.style.color = '#fff';
-      btn.style.border = 'none';
-      btn.style.borderRadius = '16px';
-      btn.style.padding = '10px 14px';
-      btn.style.boxShadow = SAKURA_SHADOW;
-    });
-
-    // f) активная ссылка в меню (сложный селектор)
-    if (activeNavLink) {
-      activeNavLink.style.background = '#ffd3e9';
-      activeNavLink.style.color = SAKURA_TEXT;
-      activeNavLink.style.borderRadius = '10px';
-      activeNavLink.style.padding = '6px 10px';
-    }
-
-    // g) заголовки и ссылки
-    sectionTitles.forEach((h) => {
-      h.style.color = SAKURA_TEXT;
-      h.style.borderBottom = `2px dashed ${SAKURA_DEEP}`;
-      h.style.paddingBottom = '6px';
-    });
-    allLinks.forEach((a) => {
-      a.style.color = SAKURA_LINK;
-    });
-
-    // h) прямые дети <main> — чуть расстояния
-    mainChildren.forEach((child) => {
-      child.style.marginBottom = '12px';
-    });
-  };
-
-  const off = () => {
-    // Сбросим всё, что выставляли (минимум по тем же точкам)
-    const root = (pageWrapper || body);
-    root.style.background = '';
-    root.style.color = '';
-    root.style.letterSpacing = '';
-    root.style.lineHeight = '';
-
-    if (headerBar) {
-      headerBar.style.background = '';
-      headerBar.style.boxShadow = '';
-    }
-
-    if (mainSlider) {
-      mainSlider.style.background = '';
-      mainSlider.style.borderRadius = '';
-      mainSlider.style.boxShadow = '';
-      mainSlider.style.padding = '';
-    }
-    if (newsBox) {
-      newsBox.style.background = '';
-      newsBox.style.border = '';
-      newsBox.style.borderRadius = '';
-      newsBox.style.boxShadow = '';
-      newsBox.style.padding = '';
-    }
-
-    cards.forEach((el) => {
-      el.style.background = '';
-      el.style.border = '';
-      el.style.borderRadius = '';
-      el.style.boxShadow = '';
-      el.style.padding = '';
-    });
-
-    buttons.forEach((btn) => {
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.border = '';
-      btn.style.borderRadius = '';
-      btn.style.padding = '';
-      btn.style.boxShadow = '';
-    });
-
-    if (activeNavLink) {
-      activeNavLink.style.background = '';
-      activeNavLink.style.color = '';
-      activeNavLink.style.borderRadius = '';
-      activeNavLink.style.padding = '';
-    }
-
-    sectionTitles.forEach((h) => {
-      h.style.color = '';
-      h.style.borderBottom = '';
-      h.style.paddingBottom = '';
-    });
-    allLinks.forEach((a) => {
-      a.style.color = '';
-    });
-
-    mainChildren.forEach((child) => {
-      child.style.marginBottom = '';
-    });
-  };
-
-  enabled ? on() : off();
-}
-
-// Создаёт кнопку в DOM (добавляет в .box_links, иначе в body)
-function ensureSakuraButton() {
-  // не дублировать
+// === КНОПКА ПЕРЕКЛЮЧЕНИЯ ===
+function createToggleButton() {
   if (document.getElementById('sakura-toggle')) return;
 
-  const btn = document.createElement('button');
-  btn.id = 'sakura-toggle';
-  btn.type = 'button';
-  btn.setAttribute('aria-live', 'polite');
+  const button = document.createElement('button');
+  button.id = 'sakura-toggle';
+  button.innerHTML = 'Включить сакуру';
 
-  // Ищем контейнер для кнопок, иначе вставляем в body
-  const container = document.querySelector('.box_links') || document.body;
-
-  // Базовые стили кнопки (видимая и удобная)
-  Object.assign(btn.style, {
-    position: container === document.body ? 'fixed' : '',
-    right: container === document.body ? '16px' : '',
-    bottom: container === document.body ? '16px' : '',
-    background: '#ffd1e6',
-    color: '#5a1f35',
-    border: '1px solid #e89abc',
-    borderRadius: '18px',
-    padding: '8px 12px',
-    cursor: 'pointer',
-    boxShadow: '0 4px 12px rgba(197, 74, 127, 0.25)',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
+  Object.assign(button.style, {
+    position: 'fixed',
+    top: '15px',
+    right: '15px',
+    zIndex: '10000',
+    background: SAKURA_DEEP,
+    color: '#ffffff',
+    border: `2px solid ${SAKURA_SOFT}`,
+    borderRadius: '16px',
+    padding: '10px 16px',
     fontSize: '14px',
-    lineHeight: '1'
+    cursor: 'pointer',
+    boxShadow: `0 6px 18px ${SAKURA_GLOW_2}`,
+    transition: 'transform .15s ease, box-shadow .15s ease'
   });
 
-  // Содержимое: иконка Сакуры + статус
-  const icon = document.createElement('span');
-  icon.textContent = '🌸';
-  const label = document.createElement('span');
-  label.id = 'sakura-status-label';
+  button.onmouseenter = () => {
+    button.style.boxShadow = `0 0 16px ${SAKURA_GLOW_1}, 0 0 26px ${SAKURA_GLOW_2}`;
+    button.style.transform = 'translateY(-1px)';
+  };
+  button.onmouseleave = () => {
+    button.style.boxShadow = `0 6px 18px ${SAKURA_GLOW_2}`;
+    button.style.transform = 'none';
+  };
 
-  btn.appendChild(icon);
-  btn.appendChild(label);
+  // логика переключения
+  button.onclick = function() {
+    const isEnabled = localStorage.getItem('sakuraStyle') === 'true';
+    if (isEnabled) {
+      removeSakuraStyles();
+      localStorage.setItem('sakuraStyle', 'false');
+      button.innerHTML = 'Включить сакуру';
+      button.style.background = SAKURA_DEEP;
+    } else {
+      sakuraStyles();
+      localStorage.setItem('sakuraStyle', 'true');
+      button.innerHTML = 'Включить базу';
+      button.style.background = SAKURA_DEEP;
+    }
+  };
 
-  // Вставляем
-  container.appendChild(btn);
-
-  // Обработчик клика
-  btn.addEventListener('click', () => {
-    const next = !isSakuraEnabled();
-    setSakuraEnabled(next);
-    applySakuraTheme(next);
-    updateButtonLabel();
-  });
-
-  // Устанавливаем начальную надпись
-  function updateButtonLabel() {
-    const enabled = isSakuraEnabled();
-    label.textContent = enabled ? 'Sakura: ВКЛ' : 'Sakura: ВЫКЛ';
-    btn.title = enabled ? 'Выключить Sakura-тему' : 'Включить Sakura-тему';
-  }
-
-  // Экспортируем обновление чтобы вызвать снаружи после применения темы
-  btn.updateButtonLabel = updateButtonLabel;
-
-  return btn;
+  document.body.appendChild(button);
 }
 
-// Инициализация: применить тему по localStorage, создать кнопку, синхронизировать статус
-(function initSakuraTheme() {
-  const startEnabled = isSakuraEnabled();
-  applySakuraTheme(startEnabled);
+// === Демонстрация требуемых DOM-методов ===
+function demonstrateDOMUsage() {
+  console.log('🔧 Demonstrating DOM methods:');
 
-  // дождаться DOM для вставки кнопки
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      const btn = ensureSakuraButton();
-      if (btn && typeof btn.updateButtonLabel === 'function') btn.updateButtonLabel();
-    });
+  // getElementById
+  const page = document.getElementById('page_wrapper');
+  console.log(page ? '✅ getElementById: page_wrapper found' : '❌ getElementById: page_wrapper not found');
+
+  // querySelector с «сложным» селектором
+  const complex = document.querySelector('footer .section'); // потомок .section внутри footer
+  if (complex) {
+    const classes1 = complex.className ? ` class="${complex.className}"` : '';
+    console.log(`✅ querySelector (complex): footer .section found (${complex.tagName.toLowerCase()},${classes1})`);
+
+    // parentElement
+    const parent = complex.parentElement;
+    if (parent) {
+      const classes2 = parent.className ? ` class="${parent.className}"` : '';
+      console.log(`✅ parentElement: parent found (${parent.tagName.toLowerCase()},${classes2})`);
+    } else {
+      console.log('❌ parentElement: parent not found');
+    }
+
+    // children
+    const children = complex.children;
+    console.log(`✅ children: ${children.length} child elements found`);
   } else {
-    const btn = ensureSakuraButton();
-    if (btn && typeof btn.updateButtonLabel === 'function') btn.updateButtonLabel();
+    console.log('❌ querySelector (complex): footer .section not found');
   }
-})();
+
+  // querySelectorAll
+  const links = document.querySelectorAll('a');
+  console.log(`✅ querySelectorAll: found ${links.length} <a>`);
+}
+
+// === Инициализация ===
+function init() {
+  console.log('🌸 Initializing Sakura Style');
+  createToggleButton();
+  demonstrateDOMUsage();
+
+  const isEnabled = localStorage.getItem('sakuraStyle') === 'true';
+  if (isEnabled) {
+    sakuraStyles();
+    const btn = document.getElementById('sakura-toggle');
+    if (btn) btn.innerHTML = 'Включить базу';
+  }
+  console.log('✅ Sakura initialized');
+}
+
+// Запуск после загрузки
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
