@@ -27,7 +27,8 @@ function sakuraStyles() {
       --sakura-glow-1: ${SAKURA_GLOW_1};
       --sakura-glow-2: ${SAKURA_GLOW_2};
     }
-
+    h1, h2, h3, h4, h5, h6, p {
+    color: inherit !important;}
     /* 1. Базовый цвет текста */
     body {
       color: var(--sakura-text) !important;
@@ -175,7 +176,10 @@ function sakuraStyles() {
       margin-top: 100px !important;
       border-radius: 14px !important;
     }
+    .kai_page p{
+      color: #ff188f !important;}
 
+    
     /* 18. Учебные подразделения (контейнер) */
     .institutes_slider_box.institutes_box.cf.disable-user-actions{
       box-shadow:
@@ -275,8 +279,9 @@ function createToggleButton() {
       button.style.background = SAKURA_DEEP;
     }
   };
+  const buttonContainer = document.querySelector('.box_links');
+  buttonContainer.appendChild(button);
 
-  document.body.appendChild(button);
 }
 
 // === Демонстрация требуемых DOM-методов ===
