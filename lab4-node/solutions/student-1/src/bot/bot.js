@@ -1,7 +1,10 @@
 import { Telegraf, Markup } from 'telegraf';
+
+import { storage } from '../storage/fileStorage.js';
+
 import { STATES, nextState } from './fsm.js';
 import { getSession, setSession, clearSession } from './sessionStore.js';
-import { storage } from '../storage/fileStorage.js';
+
 
 export async function launchBot() {
   const token = process.env.BOT_TOKEN;
@@ -43,7 +46,7 @@ export async function launchBot() {
     const words = await storage.getWords(userId);
     if (!words.length) return ctx.reply('Нет слов для викторины. Добавьте через «Добавить слово».');
 
-    let session = await getSession(userId);
+    const session = await getSession(userId);
     session.state = nextState(session.state, { type: 'START_QUIZ' });
 
     const random = words[Math.floor(Math.random() * words.length)];
@@ -231,12 +234,12 @@ export async function launchBot() {
 
   // Безопасный обработчик ошибок
   bot.catch((err, ctx) => {
-    // eslint-disable-next-line no-console
+     
     console.error('Bot error for', ctx.updateType, err);
   });
 
   await bot.launch();
-  // eslint-disable-next-line no-console
+   
   console.log('[bot] launched');
 
   process.once('SIGINT', () => bot.stop('SIGINT'));

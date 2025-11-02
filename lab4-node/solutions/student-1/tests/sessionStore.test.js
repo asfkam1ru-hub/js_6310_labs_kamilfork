@@ -9,7 +9,11 @@ describe('sessionStore', () => {
   });
 
   afterAll(async () => {
-    try { await unlink(TMP); } catch {}
+    try {
+      await unlink(TMP);
+    } catch (_e) {
+      /* no-op */
+    }
   });
 
   test('get default session when none exists', async () => {
@@ -30,5 +34,6 @@ describe('sessionStore', () => {
     await clearSession('u2');
     const s = await getSession('u2');
     expect(s.state).toBe('IDLE');
+    expect(s.draft).toEqual({});
   });
 });

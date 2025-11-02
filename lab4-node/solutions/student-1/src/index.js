@@ -1,8 +1,7 @@
-import dotenv from 'dotenv';
-import { launchBot } from './bot/bot.js';
-import { createServer } from './api/server.js';
+import 'dotenv/config';
 
-dotenv.config();
+import { createServer } from './api/server.js';
+import { launchBot } from './bot/bot.js';
 
 const port = process.env.PORT || 3000;
 

@@ -13,7 +13,12 @@ describe('API integration', () => {
   });
 
   afterAll(async () => {
-    try { await unlink(TMP); } catch {}
+    try {
+      await unlink(TMP);
+    } catch (_e) {
+    void _e; // mark used
+    /* no-op: temp file might already be removed */
+   }
   });
 
   test('GET /health', async () => {

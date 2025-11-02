@@ -7,8 +7,13 @@ describe('storage', () => {
   beforeEach(async () => {
     await writeFile(TMP, JSON.stringify({ users: {}, sessions: {} }, null, 2), 'utf8');
   });
+
   afterAll(async () => {
-    try { await unlink(TMP); } catch {}
+    try {
+      await unlink(TMP);
+    } catch (_e) {
+      /* ignore cleanup errors */
+    }
   });
 
   test('add and get word', async () => {
