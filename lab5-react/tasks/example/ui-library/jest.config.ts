@@ -18,6 +18,6 @@ const config = {
   collectCoverage: false,
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'],
   coverageDirectory: 'coverage',
-};
+}
 
-export default config;
+export default config

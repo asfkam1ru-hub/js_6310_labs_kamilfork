@@ -18,7 +18,7 @@
 }
 
 .btn--primary:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #00b348;
 }
 
 .btn--secondary {
@@ -27,7 +27,7 @@
 }
 
 .btn--secondary:hover:not(:disabled) {
-  background-color: #545b62;
+  background-color: #a50f4b;
 }
 
 .btn--small {
@@ -37,7 +37,7 @@
 
 .btn--medium {
   padding: 12px 16px;
-  font-size: 14px;
+  font-size: 20px;
 }
 
 .btn--large {
